@@ -80,6 +80,7 @@ module ActiveSupport
         if options.key?(:cache_nils)
           options[:skip_nil] = !options.delete(:cache_nils)
         end
+        @report_on_error = options.key(:report_on_error) ? options.delete(:report_on_error) : true
         super(options)
 
         unless [String, Dalli::Client, NilClass].include?(addresses.first.class)
@@ -279,7 +280,7 @@ module ActiveSupport
             error,
             severity: :warning,
             source: "mem_cache_store.active_support",
-          )
+          ) if @report_on_error
           fallback
         end
     end
